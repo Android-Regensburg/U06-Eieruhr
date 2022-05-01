@@ -2,17 +2,17 @@
 <resources>
 
     <string name="app_name">EggTimer</string>
-    <string name="action_settings">Settings</string>
-    <string name="timer_hint">00:00</string>
-    <string name="variation_label">Zubereitung</string>
-    <string name="button_label">Start</string>
-    <string name="timer_label">Dein Ei wird fertig sein in:</string>
-    <string name="timer_description">Hier kannst du auswählen, wie du dein Ei zubereiten möchtest. Drücke danach auf Start, um den Timer zu starten.</string>
+    <string name="txt_timer_hint">00:00:00</string>
+    <string name="txt_timer_template">$HOURS:$MINUTES:$SECONDS</string>
+    <string name="btn_start_timer_text">Timer starten</string>
+    <string name="txt_remaining_time_text">Verbleibende Zeit:</string>
+    <string name="txt_timer_description">Gib eine Zeit ein um den Timer zu starten</string>
+    <string name="toast_incorrect_input">Bitte passen Sie ihre Eingaben an</string>
+    <string name="edt_timer_input_hint">00</string>
+    <string name="txt_hours">Stunden</string>
+    <string name="txt_minutes">Minuten</string>
+    <string name="txt_seconds">Sekunden</string>
 
-    <string-array name="variation_values">
-        <item>Weichgekocht</item>
-        <item>Kernweich</item>
-        <item>Hartgekocht</item>
-    </string-array>
+
 
 </resources>

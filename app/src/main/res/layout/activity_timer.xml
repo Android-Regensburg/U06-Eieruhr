@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/txt_remaining_time"
+        style="@style/AppTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/txt_remaining_time_text"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_timer"
+        style="@style/AppTheme"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:hint="@string/txt_timer_hint"
+        android:gravity="center"
+        android:textSize="50sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_remaining_time" />
+
+    <TextView
+        android:id="@+id/txt_timer_description"
+        style="@style/AppTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="@string/txt_timer_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_timer" />
+
+    <EditText
+        android:id="@+id/edt_hour_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:ems="2"
+        android:hint="@string/edt_timer_input_hint"
+        android:gravity="center"
+        android:inputType="number"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@id/edt_minute_input"
+        app:layout_constraintEnd_toStartOf="@+id/edt_minute_input"
+        app:layout_constraintTop_toTopOf="@id/edt_minute_input" />
+
+    <EditText
+        android:id="@+id/edt_minute_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="2"
+        android:gravity="center"
+        android:hint="@string/edt_timer_input_hint"
+        android:inputType="number"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_timer_description" />
+
+    <EditText
+        android:id="@+id/edt_second_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:ems="2"
+        android:hint="@string/edt_timer_input_hint"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@+id/edt_minute_input"
+        app:layout_constraintStart_toEndOf="@+id/edt_minute_input"
+        app:layout_constraintTop_toTopOf="@+id/edt_minute_input" />
+
+    <TextView
+        android:id="@+id/txt_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/txt_hours"
+        app:layout_constraintEnd_toEndOf="@+id/edt_hour_input"
+        app:layout_constraintStart_toStartOf="@+id/edt_hour_input"
+        app:layout_constraintTop_toBottomOf="@+id/edt_hour_input" />
+
+    <TextView
+        android:id="@+id/txt_minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/txt_minutes"
+        app:layout_constraintEnd_toEndOf="@+id/edt_minute_input"
+        app:layout_constraintStart_toStartOf="@+id/edt_minute_input"
+        app:layout_constraintTop_toBottomOf="@+id/edt_minute_input" />
+
+    <TextView
+        android:id="@+id/txt_seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/txt_seconds"
+        app:layout_constraintEnd_toEndOf="@+id/edt_second_input"
+        app:layout_constraintStart_toStartOf="@+id/edt_second_input"
+        app:layout_constraintTop_toBottomOf="@+id/edt_second_input" />
+</androidx.constraintlayout.widget.ConstraintLayout>

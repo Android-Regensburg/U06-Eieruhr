@@ -7,23 +7,23 @@ import android.content.IntentFilter;
 
 /**
  * Der BroadcastReceiver empfängt Broadcasts anderer Android-Apps oder, in diesem Fall, eines Hintergrundservices unserer App.
- * Hier soll bei Änderung oder Ablauf des Timers später die EggTimerActivity informiert werden.
+ * Hier soll bei Änderung oder Ablauf des Timers später die TimerActivity informiert werden.
  */
-public class EggTimerBroadcastReceiver extends BroadcastReceiver {
+public class TimerBroadcastReceiver extends BroadcastReceiver {
 
     /**
      * Konstanten zur Unterscheidung der Broadcast-Nachrichten
      */
-    private static final String TIMER_UPDATE = "de.ur.mi.android.task.eggtimer.TIMER_UPDATE";
-    private static final String TIMER_FINISHED = "de.ur.mi.android.task.eggtimer.TIMER_FINISHED";
+    private static final String TIMER_UPDATE = "de.ur.mi.android.task.timer.TIMER_UPDATE";
+    private static final String TIMER_FINISHED = "de.ur.mi.android.task.timer.TIMER_FINISHED";
     private static final String REMAINING_TIME_IN_SECONDS = "REMAINING_TIME_IN_SECONDS";
 
     /**
-     * Über den EggTimerBroadcastListener kann die Activity informiert werden
+     * Über den TimerBroadcastListener kann die Activity informiert werden
      */
-    private final EggTimerBroadcastListener listener;
+    private final TimerBroadcastListener listener;
 
-    public EggTimerBroadcastReceiver(EggTimerBroadcastListener listener) {
+    public TimerBroadcastReceiver(TimerBroadcastListener listener) {
         this.listener = listener;
     }
 
@@ -49,8 +49,8 @@ public class EggTimerBroadcastReceiver extends BroadcastReceiver {
      */
     public static IntentFilter getIntentFilter() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(EggTimerBroadcastReceiver.TIMER_UPDATE);
-        filter.addAction(EggTimerBroadcastReceiver.TIMER_FINISHED);
+        filter.addAction(TimerBroadcastReceiver.TIMER_UPDATE);
+        filter.addAction(TimerBroadcastReceiver.TIMER_FINISHED);
         return filter;
     }
 
