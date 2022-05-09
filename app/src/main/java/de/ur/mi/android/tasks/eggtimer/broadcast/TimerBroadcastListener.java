@@ -9,4 +9,6 @@ public interface TimerBroadcastListener {
 
     void onTimerFinished();
 
+    void onTimerCancelled();
+
 }

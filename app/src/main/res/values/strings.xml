@@ -14,6 +14,11 @@
     <string name="txt_minutes">Minuten</string>
     <string name="txt_seconds">Sekunden</string>
 
+    <string name="notif_title">Timer</string>
+    <string name="notif_message_update">Verbleibende Zeit: $TIME</string>
+    <string name="notif_message_finished">Zeit abgelaufen</string>
+    <string name="notif_message_cancelled">Timer abgebrochen</string>
+
 
 
 

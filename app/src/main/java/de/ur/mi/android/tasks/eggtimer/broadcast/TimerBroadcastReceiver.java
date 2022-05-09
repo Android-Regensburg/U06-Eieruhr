@@ -16,7 +16,9 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
      */
     private static final String TIMER_UPDATE = "de.ur.mi.android.task.timer.TIMER_UPDATE";
     private static final String TIMER_FINISHED = "de.ur.mi.android.task.timer.TIMER_FINISHED";
+    private static final String TIMER_CANCELLED = "de.ur.mi.android.task.timer.TIMER_CANCELLED";
     private static final String REMAINING_TIME_IN_SECONDS = "REMAINING_TIME_IN_SECONDS";
+
 
     /**
      * Über den TimerBroadcastListener kann die Activity informiert werden
@@ -26,6 +28,8 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
     public TimerBroadcastReceiver(TimerBroadcastListener listener) {
         this.listener = listener;
     }
+
+
 
     /**
      * Die onReceive-Callback-Methode wird aufgerufen, wenn Broadcasts mit den Aktionsbezeichnern empfangen werden,
@@ -41,6 +45,9 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
             case TIMER_FINISHED:
                 listener.onTimerFinished();
                 break;
+            case TIMER_CANCELLED:
+                listener.onTimerCancelled();
+                break;
         }
     }
 
@@ -51,6 +58,7 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
         IntentFilter filter = new IntentFilter();
         filter.addAction(TimerBroadcastReceiver.TIMER_UPDATE);
         filter.addAction(TimerBroadcastReceiver.TIMER_FINISHED);
+        filter.addAction(TimerBroadcastReceiver.TIMER_CANCELLED);
         return filter;
     }
 
@@ -72,6 +80,12 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
     public static Intent getEndIntent() {
         Intent intent = new Intent();
         intent.setAction(TIMER_FINISHED);
+        return intent;
+    }
+
+    public static Intent getCancelledIntent() {
+        Intent intent = new Intent();
+        intent.setAction(TIMER_CANCELLED);
         return intent;
     }
 
