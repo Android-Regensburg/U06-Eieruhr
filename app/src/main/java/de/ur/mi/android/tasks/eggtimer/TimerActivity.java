@@ -2,7 +2,9 @@ package de.ur.mi.android.tasks.eggtimer;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,12 +47,27 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     private void initData() {
         broadcastReceiver = new TimerBroadcastReceiver(this);
         timer = new Timer(TimerActivity.this);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         registerBroadcastReceiver();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adjustOnResume();
+    }
+
+    private void adjustOnResume() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (!prefs.getBoolean(Timer.TIME_KEY, false)){
+            btnStartTimer.setEnabled(true);
+            btnStopTimer.setEnabled(false);
+        }
     }
 
     private void registerBroadcastReceiver() {
