@@ -9,6 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastListener;
 
+/**
+ * Diese Klasse stellt den Timer dar, welche die Hauptfunktion der App bildet.
+ */
 public class Timer implements Runnable {
 
     public static String TIME_KEY = "TIME_KEY";
@@ -24,10 +27,21 @@ public class Timer implements Runnable {
         isRunning = false;
     }
 
+    /**
+     * Über diese Methode kann festgelegt werden, wie lange der Timer läuft
+     * @param time Laufzeit des Timers, in Sekunden.
+     */
     public void setTime(int time){
         this.time = time;
     }
 
+    /**
+     * Über diese Methode wird der Timer gestartet, es wird ein Sheduled Executor erzeugt, welcher
+     * anschließdend die entprechende Run-Methode des übergebenen Runnables in reglemäßigen
+     * Abständen (hier: jede Sekunde) ausführt. Der ScheduledExecutor liefert uns ein Objekt des Typs
+     * SheduledFuture, welches jederzeit beendet werden kann, um die weitere Ausführung des
+     * Executors abzubrechen.
+     */
     public void start()
     {
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -35,6 +49,9 @@ public class Timer implements Runnable {
         isRunning = true;
     }
 
+    /**
+     * Hält den Timer an und cancelled das SheduledFuture.
+     */
     public void stop(){
         if (isRunning){
             scheduledFuture.cancel(true);
@@ -43,6 +60,10 @@ public class Timer implements Runnable {
         }
     }
 
+    /**
+     * Die run-Methode setzt bei jeder Ausführung die Zeit um 1 herab, wenn sie 0 erreicht wird die
+     * weitere Ausführung abgebrochen.
+     */
     @Override
     public void run() {
         time--;

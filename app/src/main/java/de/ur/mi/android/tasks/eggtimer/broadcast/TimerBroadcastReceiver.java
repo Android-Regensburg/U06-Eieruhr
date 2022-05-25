@@ -83,6 +83,10 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
         return intent;
     }
 
+    /**
+     * Erzeugt einen Intent, der diesen BroadcastReceiver darüber informiert, dass der Timer
+     * abgebrochen wurde.
+     */
     public static Intent getCancelledIntent() {
         Intent intent = new Intent();
         intent.setAction(TIMER_CANCELLED);
