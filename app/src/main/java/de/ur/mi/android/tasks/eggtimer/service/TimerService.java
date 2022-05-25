@@ -12,6 +12,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.text.DecimalFormat;
+
 import de.mi.eggtimer.R;
 import de.ur.mi.android.tasks.eggtimer.Timer;
 import de.ur.mi.android.tasks.eggtimer.TimerActivity;
@@ -139,11 +141,13 @@ public class TimerService extends Service {
      */
     private void adjustNotification(int remainingTimeInSeconds){
         Notification notification = notificationHelper.createNotification(getString(R.string.notif_title),
-                getString(R.string.notif_message_update).replace("$TIME", String.valueOf(remainingTimeInSeconds)),
+                getString(R.string.notif_message_update).replace("$TIME", Timer.getFormattedStringFromInt(this, remainingTimeInSeconds)),
                 R.drawable.ic_launcher,
                 notificationHelper.createContentIntent(TimerActivity.class));
         notificationHelper.showNotification(NotificationHelper.NOTIFICATION_ID_TIMER_SERVICE, notification);
     }
+
+
 
     /**
      * Passt die Notification des Service an und ändert den Content der Notification so, dass bei

@@ -170,7 +170,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     private void startTimerForTime(int timeInSeconds) {
         btnStartTimer.setEnabled(false);
         btnStopTimer.setEnabled(true);
-        updateTimerValue(timeInSeconds);
+        txtTimer.setText(Timer.getFormattedStringFromInt(this, timeInSeconds));
         Intent intent = new Intent(this, TimerService.class);
         intent.putExtra(Timer.TIME_KEY, timeInSeconds);
         startForegroundService(intent);
@@ -243,7 +243,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     @Override
     public void onTimerUpdate(int remainingTimeInSeconds) {
         runOnUiThread(() -> {
-            updateTimerValue(remainingTimeInSeconds);
+            txtTimer.setText(Timer.getFormattedStringFromInt(this, remainingTimeInSeconds));
         });
     }
 

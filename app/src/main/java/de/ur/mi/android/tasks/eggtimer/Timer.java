@@ -1,12 +1,15 @@
 package de.ur.mi.android.tasks.eggtimer;
 
+import android.content.Context;
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import de.mi.eggtimer.R;
 import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastListener;
 
 /**
@@ -74,5 +77,20 @@ public class Timer implements Runnable {
             listener.onTimerFinished();
             scheduledFuture.cancel(true);
         }
+    }
+
+    /**
+     * Wandelt die restliche Laufzeit des Timers in einen String um und formatiert die Anzeige so,
+     * dass sie das Muster ##:##:## hat
+     */
+    public static String getFormattedStringFromInt(Context context, int remainingSeconds) {
+        DecimalFormat df = new DecimalFormat("00");
+        int hours = remainingSeconds / 60 / 60;
+        remainingSeconds = remainingSeconds - (hours * 60 * 60);
+        int minutes = remainingSeconds / 60;
+        int seconds = remainingSeconds % 60;
+        return context.getString(R.string.txt_timer_template).replace("$HOURS", df.format(hours))
+                .replace("$MINUTES", df.format(minutes))
+                .replace("$SECONDS", df.format(seconds));
     }
 }
