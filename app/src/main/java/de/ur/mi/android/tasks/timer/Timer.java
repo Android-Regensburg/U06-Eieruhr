@@ -16,11 +16,13 @@ import de.ur.mi.android.tasks.timer.broadcast.TimerBroadcastListener;
  */
 public class Timer implements Runnable {
 
+    private final TimerBroadcastListener listener;
+
     public static String TIME_KEY = "TIME_KEY";
 
-    public Timer ()
+    public Timer (TimerBroadcastListener listener)
     {
-        //TODO: Passen sie den Konstruktor so an, dass er sich für die Verwendung eignet.
+        this.listener = listener;
     }
 
 

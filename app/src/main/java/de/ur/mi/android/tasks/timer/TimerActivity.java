@@ -65,6 +65,9 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     //endregion
 
+
+    //region Broadcast-Management
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -97,6 +100,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
         }
     }
 
+    //endregion
 
     /**
      * Stoppt den Timer, indem der Service beendet wird.
