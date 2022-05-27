@@ -21,7 +21,7 @@ public class TimerStateStorage {
     }
 
     private void setStoredValue(TimerState state) {
-        context.getSharedPreferences(TIMER_PREFERENCES_KEY, Context.MODE_PRIVATE).edit().putBoolean(TIMER_STATE_KEY, state.value).commit();
+        context.getSharedPreferences(TIMER_PREFERENCES_KEY, Context.MODE_PRIVATE).edit().putBoolean(TIMER_STATE_KEY, state.value).apply();
     }
 
     public static TimerStateStorage fromContext(Context context) {
