@@ -3,16 +3,9 @@ package de.ur.mi.android.tasks.eggtimer.service;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.util.Log;
-
-import androidx.annotation.Nullable;
-
-import java.text.DecimalFormat;
 
 import de.mi.eggtimer.R;
 import de.ur.mi.android.tasks.eggtimer.Timer;
@@ -20,7 +13,8 @@ import de.ur.mi.android.tasks.eggtimer.TimerActivity;
 import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastListener;
 import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastReceiver;
 import de.ur.mi.android.tasks.eggtimer.notifications.NotificationHelper;
-import de.ur.mi.android.tasks.eggtimer.prefs.PreferenceHelper;
+import de.ur.mi.android.tasks.eggtimer.prefs.TimerState;
+import de.ur.mi.android.tasks.eggtimer.prefs.TimerStateStorage;
 
 /**
  * Dieser Service übernimmt die Aufgabe den Timer im Hintergrund laufen zu lassen.
@@ -32,7 +26,7 @@ public class TimerService extends Service {
     private NotificationHelper notificationHelper;
     private Timer timer;
     private PowerManager.WakeLock wakeLock;
-    private PreferenceHelper preferenceHelper;
+    private TimerStateStorage stateStorage;
 
 
 
@@ -58,11 +52,9 @@ public class TimerService extends Service {
         notificationHelper = new NotificationHelper(this);
     }
 
-    /**
-     * Initialisiert das Objekt der Klasse {@link PreferenceHelper}.
-     */
+
     private void initPreferences() {
-        preferenceHelper = new PreferenceHelper(this);
+        stateStorage = TimerStateStorage.fromContext(getApplicationContext());
     }
 
 
@@ -198,6 +190,10 @@ public class TimerService extends Service {
      */
     private void setTimerRunning(boolean isRunning){
         Log.d("PREFS", "Put Value in prefs");
-        preferenceHelper.put(PreferenceHelper.TIMER_RUNNING_KEY, isRunning);
+        if(isRunning) {
+            stateStorage.setTimerState(TimerState.RUNNING);
+            return;
+        }
+        stateStorage.setTimerState(TimerState.IDLE);
     }
 }

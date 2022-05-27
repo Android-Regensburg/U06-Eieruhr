@@ -17,7 +17,8 @@ import de.mi.eggtimer.R;
 import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastListener;
 import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastReceiver;
 import de.ur.mi.android.tasks.eggtimer.notifications.NotificationHelper;
-import de.ur.mi.android.tasks.eggtimer.prefs.PreferenceHelper;
+import de.ur.mi.android.tasks.eggtimer.prefs.TimerState;
+import de.ur.mi.android.tasks.eggtimer.prefs.TimerStateStorage;
 import de.ur.mi.android.tasks.eggtimer.service.TimerService;
 
 /**
@@ -30,12 +31,14 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     private Button btnStartTimer, btnStopTimer;
     private EditText edtHours, edtMinutes, edtSeconds;
     private TimerBroadcastReceiver broadcastReceiver;
+    private TimerStateStorage stateStorage;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+        stateStorage = TimerStateStorage.fromContext(getApplicationContext());
         initUI();
         initBroadcasts();
         setupNotifications();
@@ -94,11 +97,9 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
      * passt die Buttons so an, dass sie den richtigen Status haben, je nachdem ob gerade ein Timer läuft oder nicht.
      */
     private void updateButtonStates() {
-        PreferenceHelper preferenceHelper = new PreferenceHelper(this);
-        if (preferenceHelper.getBoolean(PreferenceHelper.TIMER_RUNNING_KEY, false)){
-            btnStartTimer.setEnabled(false);
-            btnStopTimer.setEnabled(true);
-        }
+        TimerState currentState = stateStorage.getTimerState();
+        btnStartTimer.setEnabled(!currentState.value);
+        btnStopTimer.setEnabled(currentState.value);
     }
 
 
@@ -250,6 +251,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     @Override
     public void onTimerFinished() {
         Log.d("TIMER_KEY", "Timer finished");
+        stateStorage.setTimerState(TimerState.IDLE);
         runOnUiThread(() -> {
             resetAndNotify("Timer finished");
         });
@@ -258,6 +260,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     @Override
     public void onTimerCancelled() {
+        stateStorage.setTimerState(TimerState.IDLE);
         runOnUiThread(() -> {
             resetAndNotify("Timer cancelled");
         });
