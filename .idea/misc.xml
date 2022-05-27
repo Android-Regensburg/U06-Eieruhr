@@ -5,10 +5,11 @@
       <map>
         <entry key="..\:/Users/Paulf/IdeaProjects/U06-Eieruhr/U06-Eieruhr/app/src/main/res/layout/activity_timer.xml" value="0.5" />
         <entry key="..\:/Users/Paulf/IdeaProjects/U06-Eieruhr/app/src/main/res/layout/activity_timer.xml" value="0.3333333333333333" />
+        <entry key="..\:/Windows-AB/Dokumente/Kurse/Android/Aufgaben/U06-Eieruhr/app/src/main/res/layout/activity_timer.xml" value="0.19444444444444445" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
 </project>

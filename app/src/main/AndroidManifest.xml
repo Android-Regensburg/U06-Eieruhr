@@ -15,7 +15,7 @@
         <service
             android:name="de.ur.mi.android.tasks.eggtimer.service.TimerService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name="de.ur.mi.android.tasks.eggtimer.TimerActivity"
