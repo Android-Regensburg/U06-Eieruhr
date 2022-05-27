@@ -4,8 +4,8 @@ import android.content.Context;
 
 public class TimerStateStorage {
 
-    public static final String TIMER_PREFERENCES_KEY = "de.ur.mi.android.timer.preferences";
-    public static final String TIMER_STATE_KEY = "de.ur.mi.android.timer.preferences.state";
+    private static final String TIMER_PREFERENCES_KEY = "de.ur.mi.android.timer.preferences";
+    private static final String TIMER_STATE_KEY = "de.ur.mi.android.timer.preferences.state";
 
     private final Context context;
     private TimerState state;

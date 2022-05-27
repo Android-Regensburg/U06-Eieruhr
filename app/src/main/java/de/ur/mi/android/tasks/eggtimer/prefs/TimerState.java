@@ -11,7 +11,7 @@ public enum TimerState {
     }
 
     static TimerState fromBoolean(boolean value) {
-        if(value) {
+        if (value) {
             return TimerState.RUNNING;
         }
         return TimerState.IDLE;
