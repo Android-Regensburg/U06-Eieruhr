@@ -1,7 +1,6 @@
-package de.ur.mi.android.tasks.eggtimer;
+package de.ur.mi.android.tasks.timer;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.Executors;
@@ -9,8 +8,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import de.mi.eggtimer.R;
-import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastListener;
+import de.mi.timer.R;
+import de.ur.mi.android.tasks.timer.broadcast.TimerBroadcastListener;
 
 /**
  * Diese Klasse stellt den Timer dar, welche die Hauptfunktion der App bildet.
@@ -21,8 +20,8 @@ public class Timer implements Runnable {
     private boolean isRunning;
     private int time;
     private static final int TICK_RATE = 1000;
-    private ScheduledFuture scheduledFuture;
-    private TimerBroadcastListener listener;
+    private ScheduledFuture<?> scheduledFuture;
+    private final TimerBroadcastListener listener;
 
     public Timer (TimerBroadcastListener listener)
     {
@@ -53,7 +52,7 @@ public class Timer implements Runnable {
     }
 
     /**
-     * Hält den Timer an und cancelled das SheduledFuture.
+     * Hält den Timer an und cancelled das ScheduledFuture.
      */
     public void stop(){
         if (isRunning){

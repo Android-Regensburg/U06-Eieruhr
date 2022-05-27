@@ -1,9 +1,8 @@
-package de.ur.mi.android.tasks.eggtimer;
+package de.ur.mi.android.tasks.timer;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,15 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.DecimalFormat;
 
-import de.mi.eggtimer.R;
-import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastListener;
-import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastReceiver;
-import de.ur.mi.android.tasks.eggtimer.notifications.NotificationHelper;
-import de.ur.mi.android.tasks.eggtimer.prefs.TimerState;
-import de.ur.mi.android.tasks.eggtimer.prefs.TimerStateStorage;
-import de.ur.mi.android.tasks.eggtimer.service.TimerService;
+import de.mi.timer.R;
+import de.ur.mi.android.tasks.timer.broadcast.TimerBroadcastListener;
+import de.ur.mi.android.tasks.timer.broadcast.TimerBroadcastReceiver;
+import de.ur.mi.android.tasks.timer.notifications.NotificationHelper;
+import de.ur.mi.android.tasks.timer.prefs.TimerState;
+import de.ur.mi.android.tasks.timer.prefs.TimerStateStorage;
+import de.ur.mi.android.tasks.timer.service.TimerService;
 
 /**
  * Die MainActivity der App, über die der Timer gestartet und gestoppt wird, sowie die
@@ -38,7 +36,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
-        stateStorage = TimerStateStorage.fromContext(getApplicationContext());
+        stateStorage = new TimerStateStorage(getApplicationContext());
         initUI();
         initBroadcasts();
         setupNotifications();
@@ -56,12 +54,8 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
         edtHours = findViewById(R.id.edt_hour_input);
         edtMinutes = findViewById(R.id.edt_minute_input);
         edtSeconds = findViewById(R.id.edt_second_input);
-        btnStartTimer.setOnClickListener(v -> {
-            startTimer();
-        });
-        btnStopTimer.setOnClickListener(v -> {
-            stopTimer();
-        });
+        btnStartTimer.setOnClickListener(v -> startTimer());
+        btnStopTimer.setOnClickListener(v -> stopTimer());
     }
 
     /**
@@ -166,6 +160,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     /**
      * Startet den Service und gibt dem Intent als Extra die Laufzeit des Timers in Sekunden mit.
+     *
      * @param timeInSeconds Laufzeit des Timers.
      */
     private void startTimerForTime(int timeInSeconds) {
@@ -179,6 +174,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     /**
      * Überprüft die Angeben der Eingabefelder.
+     *
      * @return True, wenn alle Angaben korrekt sind.
      */
     private boolean checkInputs() {
@@ -190,11 +186,12 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     /**
      * Liest die Eingaben aus den 3 Eingabefeldern aus und liefert ein int-Array zurück, welches die
      * 3 Werte beinhaltet.
+     *
      * @return int-Array mit den Werten für Stunden, Minuten und Sekunden.
      */
     @SuppressLint("SetTextI18n")
     private int[] getSetTime() {
-        int h = 0, m = 0, s = 0;
+        int h, m, s;
 
         if (edtHours.getText().toString().isEmpty()) {
             edtHours.setText("00");
@@ -215,23 +212,8 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
 
     /**
-     * Updated den Wert des Timers im Anzeigefeld und passt diesen so an, dass er ein schönes
-     * Format hat
-     */
-    private void updateTimerValue(int remainingSeconds) {
-        DecimalFormat df = new DecimalFormat("00");
-        int hours = remainingSeconds / 60 / 60;
-        remainingSeconds = remainingSeconds - (hours * 60 * 60);
-        int minutes = remainingSeconds / 60;
-        int seconds = remainingSeconds % 60;
-        String currentTimer = getString(R.string.txt_timer_template).replace("$HOURS", df.format(hours))
-                .replace("$MINUTES", df.format(minutes))
-                .replace("$SECONDS", df.format(seconds));
-        txtTimer.setText(currentTimer);
-    }
-
-    /**
      * Resets the Buttons and the timer-TextView while also allowing to send a Toast to the user
+     *
      * @param message The toasts message.
      */
     private void resetAndNotify(String message) {
@@ -243,26 +225,19 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     @Override
     public void onTimerUpdate(int remainingTimeInSeconds) {
-        runOnUiThread(() -> {
-            txtTimer.setText(Timer.getFormattedStringFromInt(this, remainingTimeInSeconds));
-        });
+        runOnUiThread(() -> txtTimer.setText(Timer.getFormattedStringFromInt(this, remainingTimeInSeconds)));
     }
 
     @Override
     public void onTimerFinished() {
-        Log.d("TIMER_KEY", "Timer finished");
         stateStorage.setTimerState(TimerState.IDLE);
-        runOnUiThread(() -> {
-            resetAndNotify("Timer finished");
-        });
+        runOnUiThread(() -> resetAndNotify(getString(R.string.toast_timer_finished)));
     }
 
 
     @Override
     public void onTimerCancelled() {
         stateStorage.setTimerState(TimerState.IDLE);
-        runOnUiThread(() -> {
-            resetAndNotify("Timer cancelled");
-        });
+        runOnUiThread(() -> resetAndNotify(getString(R.string.toast_timer_cancelled)));
     }
 }

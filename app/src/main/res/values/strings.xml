@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">EggTimer</string>
+    <string name="app_name">Timer</string>
     <string name="txt_timer_hint">00:00:00</string>
     <string name="txt_timer_template">$HOURS:$MINUTES:$SECONDS</string>
     <string name="btn_start_timer_text">Timer starten</string>
@@ -10,6 +10,8 @@
     <string name="txt_timer_description">Gib eine Zeit ein um den Timer zu starten</string>
     <string name="toast_incorrect_input">Bitte passen Sie ihre Eingaben an</string>
     <string name="toast_time_not_set">Keine gültige Zeitangabe</string>
+    <string name="toast_timer_cancelled">Timer abgebrochen</string>
+    <string name="toast_timer_finished">Timer abgelaufen</string>
     <string name="edt_timer_input_hint">00</string>
     <string name="txt_hours">Stunden</string>
     <string name="txt_minutes">Minuten</string>

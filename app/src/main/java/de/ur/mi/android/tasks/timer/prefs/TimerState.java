@@ -1,4 +1,4 @@
-package de.ur.mi.android.tasks.eggtimer.prefs;
+package de.ur.mi.android.tasks.timer.prefs;
 
 public enum TimerState {
     IDLE(false),

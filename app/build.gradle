@@ -4,7 +4,7 @@ android {
     compileSdkVersion 31
 
     defaultConfig {
-        applicationId "de.ur.mi.android.eggtimer"
+        applicationId "de.ur.mi.android.timer"
         minSdkVersion 29
         targetSdkVersion 31
         versionCode 1

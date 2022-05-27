@@ -1,4 +1,4 @@
-package de.ur.mi.android.tasks.eggtimer.notifications;
+package de.ur.mi.android.tasks.timer.notifications;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -9,7 +9,8 @@ import android.content.Intent;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+
+import de.ur.mi.android.tasks.timer.TimerActivity;
 
 /**
  * Diese Klasse kümmert sich um das erstellen und anzeigen von Notifications.
@@ -18,7 +19,7 @@ import androidx.core.app.NotificationManagerCompat;
  */
 public class NotificationHelper {
 
-    private Context context;
+    private final Context context;
     public static int NOTIFICATION_ID_TIMER_SERVICE = 1;
 
     public NotificationHelper(Context context){
@@ -70,10 +71,10 @@ public class NotificationHelper {
      * @param target Die Klasse die als Ziel dient.
      * @return Den erstellten PendingIntent.
      */
-    public PendingIntent createContentIntent(Class target)
+    public PendingIntent createContentIntent(Class<TimerActivity> target)
     {
         Intent intent = new Intent(context, target);
-        return PendingIntent.getActivity(context, 0, intent, 0);
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     /**

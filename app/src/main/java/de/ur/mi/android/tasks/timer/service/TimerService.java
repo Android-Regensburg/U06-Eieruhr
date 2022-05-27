@@ -1,25 +1,24 @@
-package de.ur.mi.android.tasks.eggtimer.service;
+package de.ur.mi.android.tasks.timer.service;
 
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.util.Log;
 
-import de.mi.eggtimer.R;
-import de.ur.mi.android.tasks.eggtimer.Timer;
-import de.ur.mi.android.tasks.eggtimer.TimerActivity;
-import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastListener;
-import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastReceiver;
-import de.ur.mi.android.tasks.eggtimer.notifications.NotificationHelper;
-import de.ur.mi.android.tasks.eggtimer.prefs.TimerState;
-import de.ur.mi.android.tasks.eggtimer.prefs.TimerStateStorage;
+import de.mi.timer.R;
+import de.ur.mi.android.tasks.timer.Timer;
+import de.ur.mi.android.tasks.timer.TimerActivity;
+import de.ur.mi.android.tasks.timer.broadcast.TimerBroadcastListener;
+import de.ur.mi.android.tasks.timer.broadcast.TimerBroadcastReceiver;
+import de.ur.mi.android.tasks.timer.notifications.NotificationHelper;
+import de.ur.mi.android.tasks.timer.prefs.TimerState;
+import de.ur.mi.android.tasks.timer.prefs.TimerStateStorage;
 
 /**
  * Dieser Service übernimmt die Aufgabe den Timer im Hintergrund laufen zu lassen.
  * Mehr Informationen zu Services gibt es auf der <a href="https://developer.android.com/guide/components/services">
- *     Android Developer WebPage</a>.
+ * Android Developer WebPage</a>.
  */
 public class TimerService extends Service {
 
@@ -27,7 +26,6 @@ public class TimerService extends Service {
     private Timer timer;
     private PowerManager.WakeLock wakeLock;
     private TimerStateStorage stateStorage;
-
 
 
     @Override
@@ -46,7 +44,7 @@ public class TimerService extends Service {
     }
 
     /**
-     * Initialisiert das Objekt der Klasse {@link NotificationHelper}.
+     * Initialisiert ein Objekt der Klasse {@link NotificationHelper}.
      */
     private void initNotifications() {
         notificationHelper = new NotificationHelper(this);
@@ -54,12 +52,13 @@ public class TimerService extends Service {
 
 
     private void initPreferences() {
-        stateStorage = TimerStateStorage.fromContext(getApplicationContext());
+        stateStorage = new TimerStateStorage(getApplicationContext());
     }
 
 
     /**
      * Initialisiert den {@link Timer}.
+     *
      * @param intent Der Intent der diesen Service startet und der über ein int-extra die Laufzeit
      *               des Timers mitliefert
      */
@@ -99,9 +98,9 @@ public class TimerService extends Service {
     /**
      * Initialisiert das WakeLock, welches dafür sorgt, dass der Service problemlos weiterläuft
      * selbst wenn das Smartphone im Standby bzw. Deep-Sleep ist.
-     *
+     * <p>
      * Mehr Informationen zum WakeLock: <a href="https://developer.android.com/training/scheduling/wakelock">
-     *     Android Developer WebPage</a>
+     * Android Developer WebPage</a>
      *
      * @param time Die Zeit nach welche das WakLock automatisch vom Android System released wird.
      */
@@ -129,9 +128,10 @@ public class TimerService extends Service {
     /**
      * Passt die Notification des Service an und ändert den Text so, dass die Anzeige den verbleibenden
      * Sekunden auf dem Timer entspricht.
+     *
      * @param remainingTimeInSeconds Die verbleibende Laufzeit des Timers.
      */
-    private void adjustNotification(int remainingTimeInSeconds){
+    private void adjustNotification(int remainingTimeInSeconds) {
         Notification notification = notificationHelper.createNotification(getString(R.string.notif_title),
                 getString(R.string.notif_message_update).replace("$TIME", Timer.getFormattedStringFromInt(this, remainingTimeInSeconds)),
                 R.drawable.ic_launcher,
@@ -140,13 +140,13 @@ public class TimerService extends Service {
     }
 
 
-
     /**
      * Passt die Notification des Service an und ändert den Content der Notification so, dass bei
      * abgelaufenem oder abgebrochenem Timer ein entsprechender Text angezeigt wird.
+     *
      * @param message Der Text, welcher in der Notification angezeigt werden soll.
      */
-    private void adjustNotification(String message){
+    private void adjustNotification(String message) {
         Notification notification = notificationHelper.createNotification(getString(R.string.notif_title),
                 message,
                 R.drawable.ic_launcher,
@@ -156,10 +156,10 @@ public class TimerService extends Service {
 
     /**
      * Dieser Broadcast wird verschickt, wenn sich der Timer updated.
+     *
      * @param remainingTime Die Zeit die noch auf dem Timer verbleibt.
      */
-    private void broadcastTimerUpdate(int remainingTime)
-    {
+    private void broadcastTimerUpdate(int remainingTime) {
         Intent intent = TimerBroadcastReceiver.getUpdateIntent(remainingTime);
         sendBroadcast(intent);
     }
@@ -167,8 +167,7 @@ public class TimerService extends Service {
     /**
      * Dieser Broadcast wird verschickt, wenn der Timer komplett abgelaufen ist.
      */
-    private void broadcastTimerFinished()
-    {
+    private void broadcastTimerFinished() {
         Intent intent = TimerBroadcastReceiver.getEndIntent();
         sendBroadcast(intent);
     }
@@ -176,8 +175,7 @@ public class TimerService extends Service {
     /**
      * Dieser Broadcast wird verschickt, wenn der Timer vor Ablauf abgebrochen wird
      */
-    private void broadcastTimerCancelled()
-    {
+    private void broadcastTimerCancelled() {
         Intent intent = TimerBroadcastReceiver.getCancelledIntent();
         sendBroadcast(intent);
     }
@@ -186,11 +184,11 @@ public class TimerService extends Service {
      * Über diese Method wird der entsprechende boolean Wert in den SharedPreferences abgelegt.
      * Diese Daten können später von der Activity benutzt werden, um Buttons und andere Elemente
      * richtig darzustellen, je nachdem ob der Timer läuft oder nicht.
+     *
      * @param isRunning boolean Wert, welcher angibt ob der Timer gerade läuft oder nicht.
      */
-    private void setTimerRunning(boolean isRunning){
-        Log.d("PREFS", "Put Value in prefs");
-        if(isRunning) {
+    private void setTimerRunning(boolean isRunning) {
+        if (isRunning) {
             stateStorage.setTimerState(TimerState.RUNNING);
             return;
         }

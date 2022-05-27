@@ -1,4 +1,4 @@
-package de.ur.mi.android.tasks.eggtimer.broadcast;
+package de.ur.mi.android.tasks.timer.broadcast;
 
 /**
  * Interface zur Informierung der TimerActivity über empfangene Broadcasts

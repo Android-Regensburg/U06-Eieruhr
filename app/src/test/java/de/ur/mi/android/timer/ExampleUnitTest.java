@@ -1,4 +1,4 @@
-package de.ur.mi.android.eggtimer;
+package de.ur.mi.android.timer;
 
 import org.junit.Test;
 
