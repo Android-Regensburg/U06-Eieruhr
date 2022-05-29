@@ -2,15 +2,19 @@
 
 ## Aufgabe
 
-In dieser Aufgabe implementieren Sie einen Timer. Die Anwendung zählt die Zeit herunter und informiert den User, sobald die Zeit abgelaufen ist. Durch Verwendung eines parallelen Threads und eines Service sorgen wir dafür, dass der UI Thread nicht blockiert wird und der Timer auch weiterläuft, wenn die Anwendung im Hintergrund oder geschlossen ist
+In dieser Aufgabe implementieren Sie einen einfachen _Timer_, den Nutzer\*innen z.B. als Kurzeitmesser oder Eieruhr verwenden können. Dazu wählen diese eine beliebige Zeitdauer aus. Über _Notifications_ und _Toast_ werden die Nutzer\*innen  von der App informiert, sobald die Zeit abgelaufen ist. Über einen _Service_ und einen zusätzlichen _Thread_ verhindern wir, dass das _User Interface_ durch den _Countdown_ blockiert wird und stellen sicher, dass die Zeit auch dann korrekt herunter gezählt wird, wenn die Anwendung nicht im Vordergrund ist.
 
-Das User Interface und einige Hilfsklassen haben wir für Sie vorbereitet. Im Starterpaket finden Sie die `TimerActivity`. Über 3 `EditText` ist hier eine Eingabe für Stunden, Minuten und Sekunden möglich. Die verbleibende Zeit wird ebenfalls hier angezeigt.
+## Vorgaben
 
-## Wichtige Stellen im vorgegebenen Code
+Im Starterpaket finden Sie eine Layout-Datei für die `TimerActivity`. Hier sind alle UI-Elemente für eine rudimentäre Umsetzung der Anwendungsidee bereits vorhanden. Die drei `EditText`-Elemente dienen der Eingabe der Zeit in Form von Stunden, Minuten und Sekunden. Über die beiden `Button`-Elemente wird der _Timer_ gestartet bzw. gestoppt.
 
-In der `TimerActivity` finden Sie bereits 2 hilfreiche Methoden, `initUI()`, welche dafür sorgt, dass die View Elemente bereits aus dem Layout ausgelesen werden und `getSetTime()` welche Ihnen ein int-array liefert, das die 3 Inputs der EditText-Felder beinhaltet, ist eines der Felder leer wird an dieser Stelle 0 zurückgeliefert.
+### TimerStorage
 
-In der `Timer`-Klasse finden Sie die `run`-Methode welche aus dem _Runnable_ Interface überschrieben wird, hier wird später die eigentliche Timerlogik sein, außerdem finden Sie hier die Methode `getFormattedStringFromInt(int seconds)`, welche einen Integer Wert als Parameter übergeben bekommt und Ihnen einen String liefert, der diesen Wert in dem Format ##:##:## darstellt. 
+Für die Umsetzung der Anwendungsidee ist es wichtig, den aktuellen Zustand des _Timers_, d.h., ob dieser aktuell "läuft" so abzuspeichern, dass diese Information auch nach einem Wechsel der Anwendung in den Hintergrund oder einem Schließen der Anwendung korrekt abgerufen werden kann. Zu diesem Zweck finden Sie im Starterpaket eine vorgegebene Klasse `TimerStateStorage`, die das Persistieren des Zustands in den _SharedPreferences_ erlaubt. Nutzen Sie diese Klassen an allen relevanten Stellen innerhalb Ihrer Lösung. Hinweise zur Verwendung finden Sie direkt im Code in Form von Kommentaren zur Klasse selbst und zu deren öffentlichen Methoden.
+
+### BroadcastReceiver
+
+Ein wichtiger Schlüssel zur erfolgreichen Implementierung der Anwendung ist das regelmäßige Kommunizieren des aktuellen Zustand des laufenden _Timers_. Das Android-Framework erlaubt es uns, über _Broadcasts_ relativ einfach, Nachrichten an beliebige Komponenten unsere Anwendung zu verschicken. _Broadcasts_ werden via Intent ohne explizite Zielangabe verschickt. Die Nachrichten werden über _Identifier_ (_Action_) eindeutig beschrieben. Komponenten, die sich im Vorfeld über einen _BroadcastReceiver_ für eine dieser _Actions_ registriert haben, empfangen die versendeten Nachrichten. Im Starterpaket finden Sie einen vorbereiteten _Receiver_ inkl. passendem _Listener_. Nutzen Sie diese Komponenten, um an den relevanten Stellen Ihrer Anwendung den aktuellen Zustand des _Timers_ per _Broadcast_ zu veröffentlichen, im _Receiver_ abzufangen und über den angegebenen _Listener_ zu verarbeiten.  
 
 ## Vorgehen
 
@@ -18,52 +22,63 @@ In der `Timer`-Klasse finden Sie die `run`-Methode welche aus dem _Runnable_ Int
 
 Laden Sie da Starterpaket herunter und verschaffen Sie sich einen Überblick über den vorgegebenen Code. Starten Sie die App im Emulator um sicherzustellen, dass keine Fehler auftreten.
 
-**Zwischenziel 1: Das Starterpaket lässt sich problemlos öffnen**
+**Zwischenziel:** Das Starterpaket lässt sich problemlos öffnen und die vorbereitete Anwendung kann im Emulator ausgeführt werden.
 
-### Schritt 2 - Auslesen von Eingaben
+### Schritt 2: Eingaben der Nutzer\*innen auslesen
 
-Implementieren Sie eine Funktion welche überprüft, ob die Eingaben valide sind (die Eingaben sind zum Beispiel dann invalide, wenn für Minuten oder Sekunden ein größerer Wert als 59 gewählt wurde). Sind die Eingaben nicht valide, so soll der/die Nutzer|in darauf hingewiesen werden, andernfalls sollen alle Angaben in Sekunden umgerechnet und zu einem Integer Wert zusammengefasst werden.
+Sorgen Sie dafür, dass beim Klick auf den _Start_-Button die aktuellen Werte aus den drei Eingabefeldern ausgelesen werden. Die Angaben zu Stunden, Minuten und Sekunden werden zu einem Gesamtwert zusammengerechnet, der die von den Nutzer\*innen eingegebene Zeit in Sekunden ausdrückt. Geben Sie die berechnete Zeit testweise über die `Log.d`-Methode aus. Fangen Sie zusätzlich Klicks auf den _Stop_-Button ab und geben Sie in der _Callback_-Methode zuerst ebenfalls nur einen passenden _Debug_-Text aus.
 
-**Zwischenziel 2: Die App erkennt falsche Inputs, richtige Inputs werden als Gesamtsekunden angezeigt**
+**Zwischenziel:** Nutzer\*innen können die Zeit für den _Timer_ einstellen. Die Anwendung reagiert intern auf Klicks auf die beiden Buttons. Beim Versuch, den _Timer_ zu starten, wird die eingegeben Zeit als Debug-Ausgabe ausgegeben.
 
-### Schritt 3 - Implementieren des Timers
+### Schritt 3:  Der Timer
 
-Passen Sie die Timer Klasse so an, dass diese einen Integer Wert als Variable hat. Anschließend können Sie mit Hilfe der Executors Klasse die `run()`-Funktion eines Runnables wiederholt und in einem bestimmten Intervall ausführen:
-```
-ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-ScheduledFuture sf = executor.scheduleAtFixedRate(Runnable runnable, Initial_delay, delay, TimeUnit);
+Erstellen Sie eine neue Klasse `Timer`. Hier wird das herunterzählen der eingegebene Zeit implementiert. Die Klasse soll über öffentliche Methoden zum Starten bzw. Stoppen des _Timers_ verfügen. Beim Aufruf der Start-Methode wird die Zeit übergeben, die im _Timer_ heruntergezählt werden soll. Status-Updates werden aus der Klasse heraus über eine einfache _Listener_-Schnittstelle kommuniziert. Ergänzen Sie ein entsprechende Interface, dass Methoden vorgibt, mit dem die Listener über die verbleibende Zeit, das erfolgreiche Ende und das vorzeitige Abbrechen des Timers informiert werden können. Beim Erstellen des `Timer`-Objekts soll dem Konstruktor ein entsprechender _Listener_ übergeben werden.
 
-```
-Die Methode `scheduleAtFixedRate` liefert ein Objet der Klasse `ScheduledFuture`, um die wiederholte Ausführung des Runnables abzubrechen könne Sie auf dem ScheduledFuture-Objekt die Methode `cancel()` aufrufen.
-Legen Sie nun ein Objekt der Klasse Timer in der TimerActivity an und registrieren Sie diese als den listener, dann können Sie mit Hilfe der `onTimerUpdate(int remainingTime)` die TextView immer aktualisieren, wenn ein Tick erfolgt.
+**Arbeiten im Hintergrund**
 
-**Zwischenziel 3: Der Timer funktioniert wenn er in der Activity angelegt wird und die Anzeige wird jeden Tick aktualisiert**
+Die ablaufende Zeit soll im Hintergrund gezählt werden, um zu verhindern, dass der _UI-Thread_ der Anwendung dadurch blockiert wird. Nutzen Sie die Klassen bzw. Interfaces `Runnable`, `Executor` und `ScheduledExecutorService` zur Umsetzung dieser Funktionalität:
 
-### Schritt 4 - Auslagern in einen Service
+- Das _Runnable_ soll regelmäßig ausgeführt werden. Bei jeder Ausführung wird die verbleibende Zeit des _Timers_ geprüft. Wenn die Zeit komplett abgelaufen ist, wird der Listener, den Sie an das `Timer`-Objekt übergeben haben, darüber informiert. Ist das Ende noch nicht erreicht, wird der selbe Listener über die noch verbleibende Zeit informiert. Überschreiben Sie dazu die `run`-Methode des _Runnable_ und implementieren Sie dort die beschriebene Programmlogik. Sie können entweder die `Timer`-Klasse selbst zum _Runnable_ machen (Vererbung) oder intern eine neue _Runnable_-Instanz erstellen. 
+- Die `Executors`-Klasse erlaubt den Zugriff auf die Komponeten der Java-Laufzeitumgebung, die für das Ausführen von Hintergrundoperationen zuständig sind. Nutzen Sie die statische Methode `newSingleThreadScheduledExecutor` um eine `ScheduledExecutorService`-Instanz zu erzeugen, mit der Sie das vorbereitet _Runnable_ später in regelmäßigen Abständen (z.B. eine Sekunde) aufrufen können.
+- Über die Methode `scheduleWithFixedDelay` des `ScheduledExecutorService` können Sie jetzt das regelmäßige Prüfen des _Timers_  über das _Runnable_ auslösen. Dazu übergeben Sie der Methode neben dem _Runnable_ auch den initialen Delay sowie den Abstand zwischen den zukünftigen Ausführen des _Runnables_. Die Methode startet den Vorgang automatisch und gibt Ihnen ein `ScheduledFuture`-Objekt zurück, dass Sie in einer Instanzvariable der `Timer`-Klasse abspeichern sollten. Über die Methoden des Objekts können Sie u.a. die ständigen Aufrufe des _Runnables_ stoppen. 
 
-Erstellen Sie nun einen neuen Vordergrund-Service, dieser wird sich darum kümmern, die Funktionalität der App im Hintergrund zu regeln, sodass unser Timer auch funktioniert, wenn die App nicht aktiv ist. Sorgen Sie durch den Methodenaufruf `startForeground()` in der onCreate Methode des Service dafür, dass dieser im Vordergrund läuft. Android verlangt hier, dass der Service eine Notifiation schickt, damit dem/der Nutzer|in klar ist, dass noch Teile der App aktiv sind, auch wenn ggf. keine Activity mehr aktiv ist. Das erstellen und schicken von Notifications wird im [Create a Notification Guide](https://developer.android.com/training/notify-user/build-notification) auf der Android developer page erklärt. Beachten Sie hier vor allem, dass Sie einen Notification Channel ertsellen müssen, über welchen später die Notifications geschickt werden können. 
+Nutzen Sie die öffentlichen Methoden der `Timer`-Klasse um das _Runnable_ zu starten bzw. zu stoppen. Erzeugen Sie in der _Activity_ der Anwendung einen neuen `Timer`, der die _Activity_ als Listener kennt. Starten Sie den Timer, nachdem die Nutzer\*innen auf den _Start_-Button geklickt haben und übergeben Sie dabei die Zeit in Sekunden, die Sie über die vorher implementierte Methode aus dem UI ausgelesen haben. Fangen Sie die Status-Updates des _Timers_ in der Activity ab und testen Sie deren Empfang über geeignete Log-Ausgaben.
 
-_Hinweis: Denken Sie daran, logisch unabhängige Teile Ihrer Anwedung zu trennen, zum Beispiel durch das erstellen einer Klasse, welche sich um die Notifications kümmert_
+**Achtung:** Denken Sie schon jetzt daran, den aktuellen Zustand des _Timers_ sicher zu speichern. Nutzen Sie dazu die vorbereitete `TimerStateStorage`-Klasse aus dem Starterpaket.
 
 
-Verlagern sie den Timer in den neu erstellten Service und benutzen Sie [Broadcasts](https://developer.android.com/guide/components/broadcasts#context-registered-receivers) um mit der Activity zu kommunizieren, nutzen Sie hierzu die Methode `sendBroadcast(Intent intent)`. Den zu übergebenden Intent liefern Ihnen Methoden der bereits gegebenen Klasse des `TimerBroadcastReceivers`.
+**Zwischenziel:** Beim Klick auf den Start-Button wird ein _Timer_ für die eingegebene Zeit gestartet. Während der Ausführung des _Timers_ wird die verbleibende Zeit regelmäßig als Log-Ausgabe in der Debugging-Konsole angezeigt. Nach Ablauf der eingestellten Zeit enden die regelmäßigen Updates. Der vollständige Durchlauf des _Timers_ wird über eine letzte Debug-Ausgabe kommuniziert.
+ 
+### Schritt 4: Aktualisieren des UIs
 
-Weitere Informationen zum Foreground-Service finden Sie bei der [Foreground Service Documentation](https://developer.android.com/guide/components/foreground-services) der Android developer page, ebenso eine [Übersicht über Services](https://developer.android.com/guide/components/services).
+Sorgen Sie dafür, dass die verbleibende Zeit korrekt im UI angezeigt wird. Nutzen Sie dazu die bereits implementierte Verbindung zwischen _Timer_ und _Activity_. Jedes Mal, wenn in der _Activity_ die verbleibende Zeit in der implementierten Methoden des Listener-Interface eingeht, erzeugen Sie aus der Angabe einen lesbaren String im Format (HH:MM:SS) und tragen diesen im entsprechenden `TextView` ein. Sobald der _Timer_ vollständig durchgelaufen ist oder vorzeitig abgebrochen wird, tragen Sie im `TextView` wieder den _Default_-Wert `00:00:00` ein. Sorgen Sie im Anschluss dafür, dass die Nutzer\*innen den laufenden _Timer_  über einen Klick auf den entsprechenden _Button_ abbrechen können.
 
-**Zwischenziel 4: Bei einem Klick auf den Timer starten Button wird nun ein ForegroundService gestartet, in welchem der Timer läuft. Der/Die Nutzer|in wird durch eine Notification darüber informiert**
+**Zwischenziel:** Während der _Timer_ läuft, wird die verbleibende Zeit im UI angezeigt. Die Anzeige wird regelmäßig aktualisiert. Der _Timer_ kann von den Nutzer\*innen abgebrochen werden. Nach dem Beenden des Timers wird im UI wieder der Default-Wert an Stelle der verbleibenden Zeit angezeigt.
 
-### Schritt 5 - Anpassen der Notification
+### Schritt 5: Auslagern in einen Service
+1
+Setzen Sie nun den wichtigen [Vordergrund-_Service_](https://developer.android.com/guide/components/foreground-services) für Ihre Anwendung um, in dem Sie eine Klasse erstellen, die von `Service` erbt.  Dieser Dienst sorgt später dafür, dass der _Timer_ auch dann weiterläuft, wenn die App nicht mehr aktiv ist, z.B. weil die _Activity_ in den Hintergrund verschoben wurde. Sorgen Sie durch den Methodenaufruf `startForeground()` in der `onCreate`-Methode des _Service_ dafür, dass dieser im Vordergrund läuft. Android verlangt dabei, dass der gestartete _Service_ eine _Notifiation_ verschickt, damit den Nutzer\*innen klar ist, dass noch Teile der App aktiv sind, auch wenn ggf. keine Activity mehr im Vordergrund sichtbar ist. Das Erstellen und Versenden von _Notifications_ wird im [Create a Notification Guide](https://developer.android.com/training/notify-user/build-notification) der Android-Dokumentation erklärt. Beachten Sie hier vor allem, dass Sie einen eigenen _Notification Channel_ für diesen Teil der Anwendung erstellen müssen, über welchen später die _Notifications_ verschickt werden.  Weitere allgemeine Informationen zum Thema _Services_ finden Sie in der [Android-Dokumentation](https://developer.android.com/guide/components/services).
 
-Den Inhalt und Titel einer Notification können Sie anpassen, indem Sie eine neue Notification mit gleicher ID anzeigen lassen. Das Android-System kümmert sich darum, dass die bereits bestehende Notification angepasst wird, statt jedes mal eine neue zu schicken.
+**Hinweis:** Spätestens hier sollten Sie sich Gedanken über die Struktur Ihrer Anwendung machen. Für den Umgang mit _Notifications_ wird zusätzlicher _Code_ benötigt. Um die `Service`-Klasse nicht unnötig komplex zu gestalten, können Sie die notwendigen Methoden für die Steuerung der _Notifications_ in eine separate Klasse auslagern, die dann vom _Service_ genutzt wird.
 
-**Zwischenziel 5: Die Notification des Service wird mit jedem Tick angepasst und zeigt die verbleibende Zeit an**
+Verwenden Sie den vorbereiteten _Timer_ in dem neu erstellten Service. Der _Timer_ kommuniziert jetzt nicht mehr mit der _Activity_, sondern mit dem _Service_, der dafür das entsprechende _Interface_ implementieren muss. Die _Updates_ zum Status des _Timers_ müssen trotzdem noch die _Activity_ erreichen. Nur so kann, während die Anwendung im Vordergrund ist, das UI korrekt angepasst werden. Versenden Sie im _Service_ dafür [Broadcasts](https://developer.android.com/guide/components/broadcasts#context-registered-receivers), die in der _Activity_ über einen _Receiver_ empfangen werden. Die notwendigen Klassen und Schnittstellen haben wir bereits vorbereitet und weiter oben erklärt. Nutzen Sie die Methode `onStart` der _Activity_, um den _BroadcastReceiver_ im System zu registrieren. In der Methode `onStop` wird die Registrierung des _Receiver_ aufgehoben (`this.unregisterBroadcastReceiver()`).
 
-### SChritt 6 - Einrichten eines WakeLock und persistieren des TimerState
+**Zwischenziel:** Bei einem Klick auf den _Start_-Button wird nun ein _Service_ gestartet, der jetzt den _Timer_ verwaltet. Die relevanten _Updates_ gehen per _Broadcast_ in der _Activity_ ein. Alle bereits implementierten Funktionen der Anwendung funktionieren weiterhin. Über den Start des _Timers_ werden die Nutzer\*innen über eine _Notification_ informiert. Beim Klick auf die _Notification_ wird die Anwendung in den Vordergrund verschoben.
 
-Die App funktioniert nun auch, wenn Sie im Hintergrund läuft, allerdings nicht wenn das Handy im Standby ist. Damit die App auch dann noch Rechenleistung von der CPU bekommt wenn das Handy im Standby ist muss ein WakeLock implementiert werden, alles wichtige dazu finden Sie auf der Android Developer Seite [Keep the device awake](https://developer.android.com/training/scheduling/wakelock#cpu).
+### Schritt 6: Besser Notifications 
 
-Letztlich muss noch sichergestellt werden, dass die Buttons der App richtig eingestellt sind (Der Timer starten Button sollte nie verfügbar sein, wenn bereits ein Timer läuft). Hierzu verwenden Sie die Klasse TimerStateStorage sowie das Enum TimerState, die dort vorgegebenen Methoden kümmern sich darum, beim starten bzw stoppen des Timers den Zustand abzuspeichern. Beim nächsten öffnen der App können Sie die gespeicherten Daten auslesen und die Buttons entsprechend anpassen.
+Der Titel und Inhalt einer _Notification_ lässt sich anpassen bzw. aktualisieren. Dazu überschreiben Sie eine bestehende _Notfication_ mit einer neuen, der Sie die selbe ID geben.. Das Android-System kümmert sich darum, dass die bereits bestehende _Notification_ angepasst bzw. ersetzt wird. Nutzen Sie diesen Mechanismus, um die aktuell verbleibende Zeit des _Timers_ auch in der _Notification_ anzuzeigen. Sorgen Sie zusätzlich dafür, dass die Nutzer\*innen über die _Notification_ über den vollständigen Durchlauf des _Timers_ oder  dessen vorzeitigem Abbruch informiert werden.
 
-_Hinweis: Um sicherzuegehen, dass diese Überprüfung stattfindet ist es ratsam die Methode `onResume` der Activity zu überschreiben. Diese wird in jedem Fall aufgerufen, wenn der User die Activity öffnet, auch wenn Sie lediglich aus dem Hintergund wieder in den Vordergrund geschoben wird._
+**Zwischenziel:** Jedes Mal, wenn der _Service_ vom _Timer_ über die noch verbleibende Zeit informiert wird, wird die _Notification_ angepasst, und die aktualisierte Restzeit angezeigt. Die _Notification_ wird nach erfolgreichem Durchlauf des _Timers_ oder dessen vorzeitigem Abbruch angepasst um den jeweiligen Zustand der Anwendung zu reflektieren.
 
-**Zwischenziel 6: Die App läuft auch im Standby problemlos weiter, beim erneuten öffnen der Activity werden die Buttons richtig dargestellt**
+### Feinschliff
+
+Die App funktioniert nun auch, wenn Sie im Hintergrund läuft, allerdings nicht wenn sich das Smartphone im _Standby_-Modus befindet. Damit die App auch dann noch Rechenleistung von der CPU bekommt, muss ein _WakeLock_ implementiert werden. Orientieren Sie sich bei der Umsetzung an [diesem Tutorial](https://developer.android.com/training/scheduling/wakelock#cpu).
+
+Als letztes sorgen Sie dafür, dass beim Öffnen der App, vor allem dann, wenn diese aus dem Hintergrund geholt wird, der korrekte Zustand im _UI_ angezeigt wird. Lesen Sie dazu in den relevanten _Life-Cycle_-Methoden der _Activity_ die Werte aus, die Sie im _Timer_ über die _TimeStateStorage_-Klasse gespeichert haben. Passen Sie den Zustand der _Buttons_ und den Inhalt des `TextViews` entsprechend an.
+
+## Screenshots der Anwendung
+
+|  App nach dem Start  | Eingabe durch Nutzer\*innen | Laufender Timer | Notification | 
+|:------:|:-------:|:-------:|:-------:|
+| ![App nach dem Start](./docs/screenshot_startup.png)   | ![App während der Eingabe durch die User](./docs/screenshot_input.png)   | ![App mit laufendem Timer](./docs/screenshot_countdown.png)   | ![Notification zum Timer-Status](./docs/screenshot_notification.png)   | 
