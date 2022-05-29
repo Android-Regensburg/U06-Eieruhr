@@ -1,7 +1,7 @@
 {
-  "title": "Eieruhr",
-  "abstract": "In dieser Aufgabe implementieren Sie eine Eieruhr, die das Stoppen der benötigten Zeit für verschiedene Varianten gekochter Eier erlaubt.",
+  "title": "Timer",
+  "abstract": "In dieser Aufgabe implementieren Sie einen einfachen Timer, den Nutzer*innen z.B. als Kurzzeitwecker verwenden können.",
   "hasStarterCode": true,
   "hasSolutionCode": true,
-  "solutionAvailableOn": "2021-05-27"
+  "solutionAvailableOn": "2022-06-02"
 }
