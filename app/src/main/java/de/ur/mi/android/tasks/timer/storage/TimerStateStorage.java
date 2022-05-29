@@ -1,4 +1,4 @@
-package de.ur.mi.android.tasks.timer.prefs;
+package de.ur.mi.android.tasks.timer.storage;
 
 import android.content.Context;
 
