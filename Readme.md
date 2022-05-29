@@ -18,7 +18,7 @@ Ein wichtiger Schlüssel zur erfolgreichen Implementierung der Anwendung ist das
 
 ## Vorgehen
 
-### Schritt 1 - Vorbereitung
+### Schritt 1: Vorbereitung
 
 Laden Sie da Starterpaket herunter und verschaffen Sie sich einen Überblick über den vorgegebenen Code. Starten Sie die App im Emulator um sicherzustellen, dass keine Fehler auftreten.
 
@@ -56,7 +56,7 @@ Sorgen Sie dafür, dass die verbleibende Zeit korrekt im UI angezeigt wird. Nutz
 **Zwischenziel:** Während der _Timer_ läuft, wird die verbleibende Zeit im UI angezeigt. Die Anzeige wird regelmäßig aktualisiert. Der _Timer_ kann von den Nutzer\*innen abgebrochen werden. Nach dem Beenden des Timers wird im UI wieder der Default-Wert an Stelle der verbleibenden Zeit angezeigt.
 
 ### Schritt 5: Auslagern in einen Service
-1
+
 Setzen Sie nun den wichtigen [Vordergrund-_Service_](https://developer.android.com/guide/components/foreground-services) für Ihre Anwendung um, in dem Sie eine Klasse erstellen, die von `Service` erbt.  Dieser Dienst sorgt später dafür, dass der _Timer_ auch dann weiterläuft, wenn die App nicht mehr aktiv ist, z.B. weil die _Activity_ in den Hintergrund verschoben wurde. Sorgen Sie durch den Methodenaufruf `startForeground()` in der `onCreate`-Methode des _Service_ dafür, dass dieser im Vordergrund läuft. Android verlangt dabei, dass der gestartete _Service_ eine _Notifiation_ verschickt, damit den Nutzer\*innen klar ist, dass noch Teile der App aktiv sind, auch wenn ggf. keine Activity mehr im Vordergrund sichtbar ist. Das Erstellen und Versenden von _Notifications_ wird im [Create a Notification Guide](https://developer.android.com/training/notify-user/build-notification) der Android-Dokumentation erklärt. Beachten Sie hier vor allem, dass Sie einen eigenen _Notification Channel_ für diesen Teil der Anwendung erstellen müssen, über welchen später die _Notifications_ verschickt werden.  Weitere allgemeine Informationen zum Thema _Services_ finden Sie in der [Android-Dokumentation](https://developer.android.com/guide/components/services).
 
 **Hinweis:** Spätestens hier sollten Sie sich Gedanken über die Struktur Ihrer Anwendung machen. Für den Umgang mit _Notifications_ wird zusätzlicher _Code_ benötigt. Um die `Service`-Klasse nicht unnötig komplex zu gestalten, können Sie die notwendigen Methoden für die Steuerung der _Notifications_ in eine separate Klasse auslagern, die dann vom _Service_ genutzt wird.
