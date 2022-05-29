@@ -16,9 +16,9 @@ import java.text.DecimalFormat;
 import de.mi.eggtimer.R;
 import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastListener;
 import de.ur.mi.android.tasks.eggtimer.broadcast.TimerBroadcastReceiver;
+import de.ur.mi.android.tasks.eggtimer.data.timer.TimerStateRepository;
 import de.ur.mi.android.tasks.eggtimer.notifications.NotificationHelper;
-import de.ur.mi.android.tasks.eggtimer.prefs.TimerState;
-import de.ur.mi.android.tasks.eggtimer.prefs.TimerStateStorage;
+import de.ur.mi.android.tasks.eggtimer.data.timer.TimerState;
 import de.ur.mi.android.tasks.eggtimer.service.TimerService;
 
 /**
@@ -31,14 +31,14 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     private Button btnStartTimer, btnStopTimer;
     private EditText edtHours, edtMinutes, edtSeconds;
     private TimerBroadcastReceiver broadcastReceiver;
-    private TimerStateStorage stateStorage;
+    private TimerStateRepository stateStorage;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
-        stateStorage = TimerStateStorage.fromContext(getApplicationContext());
+        stateStorage = new TimerStateRepository(getApplicationContext());
         initUI();
         initBroadcasts();
         setupNotifications();
@@ -166,6 +166,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     /**
      * Startet den Service und gibt dem Intent als Extra die Laufzeit des Timers in Sekunden mit.
+     *
      * @param timeInSeconds Laufzeit des Timers.
      */
     private void startTimerForTime(int timeInSeconds) {
@@ -179,6 +180,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     /**
      * Überprüft die Angeben der Eingabefelder.
+     *
      * @return True, wenn alle Angaben korrekt sind.
      */
     private boolean checkInputs() {
@@ -190,6 +192,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
     /**
      * Liest die Eingaben aus den 3 Eingabefeldern aus und liefert ein int-Array zurück, welches die
      * 3 Werte beinhaltet.
+     *
      * @return int-Array mit den Werten für Stunden, Minuten und Sekunden.
      */
     @SuppressLint("SetTextI18n")
@@ -232,6 +235,7 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     /**
      * Resets the Buttons and the timer-TextView while also allowing to send a Toast to the user
+     *
      * @param message The toasts message.
      */
     private void resetAndNotify(String message) {
@@ -250,19 +254,20 @@ public class TimerActivity extends AppCompatActivity implements TimerBroadcastLi
 
     @Override
     public void onTimerFinished() {
-        Log.d("TIMER_KEY", "Timer finished");
-        stateStorage.setTimerState(TimerState.IDLE);
-        runOnUiThread(() -> {
-            resetAndNotify("Timer finished");
+        stateStorage.setTimerState(TimerState.IDLE, state -> {
+            runOnUiThread(() -> {
+                resetAndNotify("Timer finished");
+            });
         });
     }
 
 
     @Override
     public void onTimerCancelled() {
-        stateStorage.setTimerState(TimerState.IDLE);
-        runOnUiThread(() -> {
-            resetAndNotify("Timer cancelled");
+        stateStorage.setTimerState(TimerState.IDLE, state -> {
+            runOnUiThread(() -> {
+                resetAndNotify("Timer cancelled");
+            });
         });
     }
 }

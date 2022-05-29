@@ -73,7 +73,7 @@ public class NotificationHelper {
     public PendingIntent createContentIntent(Class target)
     {
         Intent intent = new Intent(context, target);
-        return PendingIntent.getActivity(context, 0, intent, 0);
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     /**
