@@ -13,4 +13,31 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Style.TimerDigitView" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:paddingVertical">20dp</item>
+        <item name="android:background">@drawable/timer_background_shape</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textColor">@color/dark</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">60sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Style.TimerDigitView.Dark" parent="Style.TimerDigitView">
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
+    <style name="Style.TimeSelectView" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_rowWeight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:textColor">@color/light</item>
+    </style>
+
 </resources>

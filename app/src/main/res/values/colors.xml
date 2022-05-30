@@ -6,5 +6,8 @@
     <color name="accent">#FFF3B700</color>
     <color name="accent_light">#FFFFCC33</color>
     <color name="black">#FF090C08</color>
+    <color name="dark">#FF333333</color>
+    <color name="light">#FFFAFAFA</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="shadow">#FFFEFEFE</color>
 </resources>

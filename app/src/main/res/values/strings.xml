@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Timer</string>
-    <string name="txt_timer_hint">00:00:00</string>
-    <string name="txt_timer_template">$HOURS:$MINUTES:$SECONDS</string>
-    <string name="btn_start_timer_text">Timer starten</string>
-    <string name="btn_stop_timer_text">Timer stoppen</string>
-    <string name="txt_remaining_time_text">Verbleibende Zeit:</string>
-    <string name="txt_timer_description">Gib eine Zeit ein um den Timer zu starten</string>
-    <string name="toast_incorrect_input">Bitte passen Sie ihre Eingaben an</string>
-    <string name="toast_time_not_set">Keine gültige Zeitangabe</string>
-    <string name="toast_timer_cancelled">Timer abgebrochen</string>
-    <string name="toast_timer_finished">Timer abgelaufen</string>
-    <string name="edt_timer_input_hint">00</string>
-    <string name="txt_hours">Stunden</string>
-    <string name="txt_minutes">Minuten</string>
-    <string name="txt_seconds">Sekunden</string>
-
-    <string name="notif_title">Timer</string>
-    <string name="notif_message_update">Verbleibende Zeit: $TIME</string>
-    <string name="notif_message_finished">Zeit abgelaufen</string>
-    <string name="notif_message_cancelled">Timer abgebrochen</string>
-
-
-
+    <string name="app_name">QuickTimer</string>
+    <string name="timer_default_digit">0</string>
+    <string name="timer_start_button_label">Start</string>
+    <string name="timer_pause_button_label">Pause</string>
+    <string name="timer_reset_button_label">Reset</string>
+    <string name="timer_select_button_one_label">1</string>
+    <string name="timer_select_button_three_label">3</string>
+    <string name="timer_select_button_five_label">5</string>
+    <string name="timer_select_button_fifteen_label">15</string>
+    <string name="timer_select_button_thirty_label">30</string>
+    <string name="timer_select_button_sixty_label">60</string>
+    <string name="timer_select_button_add_one_label">+</string>
+    <string name="timer_select_button_subtract_one_label">-</string>
 
 </resources>
