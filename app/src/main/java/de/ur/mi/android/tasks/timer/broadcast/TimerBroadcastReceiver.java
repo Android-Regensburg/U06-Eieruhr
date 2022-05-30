@@ -14,12 +14,16 @@ import android.content.IntentFilter;
  */
 public class TimerBroadcastReceiver extends BroadcastReceiver {
 
+    // Action-Name für Broadcast zur Kommunikation der erfolgreichen Starten des Timers
+    private static final String TIMER_START = "de.ur.mi.android.task.timer.TIMER_START";
+    // Action-Name für Broadcast zur Kommunikation der erfolgreichen Pausierens des Timers
+    private static final String TIMER_PAUSE = "de.ur.mi.android.task.timer.TIMER_PAUSE";
+    // Action-Name für Broadcast zur Kommunikation der erfolgreichen Fortsetzen des Timers
+    private static final String TIMER_RESUME = "de.ur.mi.android.task.timer.TIMER_RESUME";
+    // Action-Name für Broadcast zur Kommunikation der erfolgreichen Stoppens des Timers
+    private static final String TIMER_STOP = "de.ur.mi.android.task.timer.TIMER_STOP";
     // Action-Name für Broadcast zur Kommunikation der verbleibenden Zeit des laufenden Timers
     private static final String TIMER_UPDATE = "de.ur.mi.android.task.timer.TIMER_UPDATE";
-    // Action-Name für Broadcast zur Kommunikation des erfolgreichen Durchlaufs des Timers
-    private static final String TIMER_FINISHED = "de.ur.mi.android.task.timer.TIMER_FINISHED";
-    // Action-Name für Broadcast zur Kommunikation des vorzeitigen Abbruchs des Timers
-    private static final String TIMER_CANCELLED = "de.ur.mi.android.task.timer.TIMER_CANCELLED";
     // Schlüssel zum Speichern/Auslesen der verbleibenden Zeit im entsprechenden Broadcast
     private static final String REMAINING_TIME_IN_SECONDS = "REMAINING_TIME_IN_SECONDS";
 
@@ -49,18 +53,21 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         switch (intent.getAction()) {
-            // Broadcast: Verbleibende Zeit des laufenden Timers hat sich geändert
+            case TIMER_START:
+                listener.onTimerStarted();
+                break;
+            case TIMER_PAUSE:
+                listener.onTimerPaused();
+                break;
+            case TIMER_RESUME:
+                listener.onTimerResumed();
+                break;
+            case TIMER_STOP:
+                listener.onTimerStopped();
+                break;
             case TIMER_UPDATE:
                 int remainingTimeInSeconds = intent.getExtras().getInt(REMAINING_TIME_IN_SECONDS);
-                listener.onTimerUpdate(remainingTimeInSeconds);
-                break;
-            // Broadcast: Laufender Timer ist vollständig abgelaufen
-            case TIMER_FINISHED:
-                listener.onTimerFinished();
-                break;
-            // Broadcast: Laufender Timer wurde vorzeitig abgebrochen
-            case TIMER_CANCELLED:
-                listener.onTimerCancelled();
+                listener.onTimerUpdated(remainingTimeInSeconds);
                 break;
         }
     }
@@ -73,10 +80,43 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
      */
     public static IntentFilter getIntentFilter() {
         IntentFilter filter = new IntentFilter();
+        filter.addAction(TimerBroadcastReceiver.TIMER_START);
+        filter.addAction(TimerBroadcastReceiver.TIMER_PAUSE);
+        filter.addAction(TimerBroadcastReceiver.TIMER_RESUME);
+        filter.addAction(TimerBroadcastReceiver.TIMER_STOP);
         filter.addAction(TimerBroadcastReceiver.TIMER_UPDATE);
-        filter.addAction(TimerBroadcastReceiver.TIMER_FINISHED);
-        filter.addAction(TimerBroadcastReceiver.TIMER_CANCELLED);
         return filter;
+    }
+
+
+    public static Intent getStartIntent() {
+        Intent intent = new Intent();
+        intent.setAction(TIMER_START);
+        return intent;
+    }
+
+
+    public static Intent getPauseIntent() {
+        Intent intent = new Intent();
+        intent.setAction(TIMER_PAUSE);
+        return intent;
+    }
+
+    public static Intent getResumeIntent() {
+        Intent intent = new Intent();
+        intent.setAction(TIMER_PAUSE);
+        return intent;
+    }
+
+
+    /**
+     * Erzeugt einen Intent, über den ein Broadcast versendet werden kann, der über den erfolgreichen
+     * Abschluss des Timers informiert.
+     */
+    public static Intent getStopIntent() {
+        Intent intent = new Intent();
+        intent.setAction(TIMER_STOP);
+        return intent;
     }
 
     /**
@@ -94,24 +134,5 @@ public class TimerBroadcastReceiver extends BroadcastReceiver {
         return intent;
     }
 
-    /**
-     * Erzeugt einen Intent, über den ein Broadcast versendet werden kann, der über den erfolgreichen
-     * Abschluss des Timers informiert.
-     */
-    public static Intent getEndIntent() {
-        Intent intent = new Intent();
-        intent.setAction(TIMER_FINISHED);
-        return intent;
-    }
-
-    /**
-     * Erzeugt einen Intent, über den ein Broadcast versendet werden kann, der über den vorzeitigen
-     * Abbruch des Timers informiert.
-     */
-    public static Intent getCancelledIntent() {
-        Intent intent = new Intent();
-        intent.setAction(TIMER_CANCELLED);
-        return intent;
-    }
 
 }

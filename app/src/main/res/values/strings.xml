@@ -14,5 +14,9 @@
     <string name="timer_select_button_sixty_label">60</string>
     <string name="timer_select_button_add_one_label">+</string>
     <string name="timer_select_button_subtract_one_label">-</string>
+    <string name="notification_title">QuickTimer</string>
+    <string name="notification_message_timer_completed">Timer abgelaufen!</string>
+    <string name="notification_message_timer_canceled">Timer abgebrochen</string>
+    <string name="notification_message_timer_paused">Timer pausiert!</string>
 
 </resources>
