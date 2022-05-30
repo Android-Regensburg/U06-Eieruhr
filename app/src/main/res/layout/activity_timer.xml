@@ -5,10 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <TextView
         android:id="@+id/txt_remaining_time"
-        style="@style/AppTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -20,7 +18,6 @@
 
     <TextView
         android:id="@+id/txt_timer"
-        style="@style/AppTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -35,7 +32,6 @@
 
     <TextView
         android:id="@+id/txt_timer_description"
-        style="@style/AppTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
@@ -57,7 +53,8 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@id/edt_minute_input"
         app:layout_constraintEnd_toStartOf="@+id/edt_minute_input"
-        app:layout_constraintTop_toTopOf="@id/edt_minute_input" />
+        app:layout_constraintTop_toTopOf="@id/edt_minute_input"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/edt_minute_input"
@@ -73,7 +70,8 @@
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_timer_description" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_timer_description"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/edt_second_input"
@@ -89,7 +87,8 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/edt_minute_input"
         app:layout_constraintStart_toEndOf="@+id/edt_minute_input"
-        app:layout_constraintTop_toTopOf="@+id/edt_minute_input" />
+        app:layout_constraintTop_toTopOf="@+id/edt_minute_input"
+        android:autofillHints="" />
 
     <TextView
         android:id="@+id/txt_hours"
