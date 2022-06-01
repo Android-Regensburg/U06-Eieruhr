@@ -84,6 +84,7 @@ public class TimerService extends Service {
 
             @Override
             public void onTimerFinished() {
+                timer.stop(false);
                 stopSelf();
                 broadcastTimerFinished();
                 adjustNotification(getString(R.string.notif_message_finished));
@@ -121,7 +122,7 @@ public class TimerService extends Service {
 
     @Override
     public void onDestroy() {
-        timer.stop();
+        timer.stop(true);
         setTimerRunning(false);
         wakeLock.release();
         stopForeground(false);

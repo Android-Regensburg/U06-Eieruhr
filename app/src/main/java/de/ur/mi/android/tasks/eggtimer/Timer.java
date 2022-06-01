@@ -20,9 +20,10 @@ public class Timer implements Runnable {
     public static String TIME_KEY = "TIME_KEY";
     private boolean isRunning;
     private int time;
+    private long scheduledAt;
     private static final int TICK_RATE = 1000;
-    private ScheduledFuture scheduledFuture;
-    private TimerBroadcastListener listener;
+    private ScheduledFuture<?> scheduledFuture;
+    private final TimerBroadcastListener listener;
 
     public Timer (TimerBroadcastListener listener)
     {
@@ -49,19 +50,23 @@ public class Timer implements Runnable {
     {
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         scheduledFuture = scheduledExecutorService.scheduleWithFixedDelay(this, TICK_RATE, TICK_RATE, TimeUnit.MILLISECONDS);
+        scheduledAt = System.currentTimeMillis();
         isRunning = true;
     }
 
     /**
      * Hält den Timer an und cancelled das SheduledFuture.
      */
-    public void stop(){
+    public void stop(boolean isCancelled){
         if (isRunning){
             scheduledFuture.cancel(true);
             isRunning = false;
-            listener.onTimerCancelled();
+            if (isCancelled){
+                listener.onTimerCancelled();
+            }
         }
     }
+
 
     /**
      * Die run-Methode setzt bei jeder Ausführung die Zeit um 1 herab, wenn sie 0 erreicht wird die
@@ -69,9 +74,10 @@ public class Timer implements Runnable {
      */
     @Override
     public void run() {
-        time--;
-        if (time > 0){
-            listener.onTimerUpdate(time);
+        int secondsSinceStart = (int) ((System.currentTimeMillis() - scheduledAt) / 1000);
+        int remainingTimeInSeconds = time - secondsSinceStart;
+        if (remainingTimeInSeconds > 0){
+            listener.onTimerUpdate(remainingTimeInSeconds);
         }
         else {
             listener.onTimerFinished();
